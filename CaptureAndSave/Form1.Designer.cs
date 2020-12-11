@@ -29,7 +29,7 @@ namespace CaptureAndSave
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonSendkeys = new System.Windows.Forms.Button();
             this.textDir = new System.Windows.Forms.TextBox();
             this.textNumber = new System.Windows.Forms.TextBox();
             this.textFilename = new System.Windows.Forms.TextBox();
@@ -45,19 +45,20 @@ namespace CaptureAndSave
             this.label6 = new System.Windows.Forms.Label();
             this.textBoxCommands = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.buttonStop = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
-            // button1
+            // buttonSendkeys
             // 
-            this.button1.Location = new System.Drawing.Point(106, 143);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(374, 92);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Sendkeys Commands";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonSendkeys.Location = new System.Drawing.Point(106, 195);
+            this.buttonSendkeys.Name = "buttonSendkeys";
+            this.buttonSendkeys.Size = new System.Drawing.Size(374, 92);
+            this.buttonSendkeys.TabIndex = 8;
+            this.buttonSendkeys.Text = "Sendkeys Commands";
+            this.buttonSendkeys.UseVisualStyleBackColor = true;
+            this.buttonSendkeys.Click += new System.EventHandler(this.buttonSendkeys_Click);
             // 
             // textDir
             // 
@@ -103,7 +104,12 @@ namespace CaptureAndSave
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(106, 241);
+            this.numericUpDown1.Location = new System.Drawing.Point(106, 143);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
             this.numericUpDown1.TabIndex = 6;
@@ -116,7 +122,7 @@ namespace CaptureAndSave
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(55, 243);
+            this.label1.Location = new System.Drawing.Point(55, 145);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(45, 13);
             this.label1.TabIndex = 17;
@@ -124,9 +130,9 @@ namespace CaptureAndSave
             // 
             // numericUpDown2
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(106, 267);
+            this.numericUpDown2.Location = new System.Drawing.Point(106, 169);
             this.numericUpDown2.Maximum = new decimal(new int[] {
-            10000,
+            100000,
             0,
             0,
             0});
@@ -142,7 +148,7 @@ namespace CaptureAndSave
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 269);
+            this.label2.Location = new System.Drawing.Point(8, 171);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(92, 13);
             this.label2.TabIndex = 19;
@@ -189,7 +195,7 @@ namespace CaptureAndSave
             this.textBoxCommands.Location = new System.Drawing.Point(106, 117);
             this.textBoxCommands.Name = "textBoxCommands";
             this.textBoxCommands.Size = new System.Drawing.Size(425, 20);
-            this.textBoxCommands.TabIndex = 24;
+            this.textBoxCommands.TabIndex = 5;
             this.textBoxCommands.Text = "%{PRTSC}{RIGHT}";
             // 
             // label7
@@ -201,11 +207,23 @@ namespace CaptureAndSave
             this.label7.TabIndex = 25;
             this.label7.Text = "Commands:";
             // 
+            // buttonStop
+            // 
+            this.buttonStop.Enabled = false;
+            this.buttonStop.Location = new System.Drawing.Point(486, 258);
+            this.buttonStop.Name = "buttonStop";
+            this.buttonStop.Size = new System.Drawing.Size(98, 29);
+            this.buttonStop.TabIndex = 9;
+            this.buttonStop.Text = "Stop";
+            this.buttonStop.UseVisualStyleBackColor = true;
+            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(622, 301);
+            this.Controls.Add(this.buttonStop);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.textBoxCommands);
             this.Controls.Add(this.label6);
@@ -221,7 +239,7 @@ namespace CaptureAndSave
             this.Controls.Add(this.textFilename);
             this.Controls.Add(this.textNumber);
             this.Controls.Add(this.textDir);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonSendkeys);
             this.MinimumSize = new System.Drawing.Size(638, 340);
             this.Name = "Form1";
             this.Text = "Sendkeys Commands to a Visible Window";
@@ -235,7 +253,7 @@ namespace CaptureAndSave
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonSendkeys;
         private System.Windows.Forms.TextBox textDir;
         private System.Windows.Forms.TextBox textNumber;
         private System.Windows.Forms.TextBox textFilename;
@@ -251,6 +269,7 @@ namespace CaptureAndSave
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxCommands;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button buttonStop;
     }
 }
 

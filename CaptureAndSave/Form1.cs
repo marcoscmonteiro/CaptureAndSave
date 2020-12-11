@@ -12,7 +12,6 @@ using System.Windows.Forms;
 namespace CaptureAndSave
 {
 
-
     public partial class Form1 : Form
     {
 
@@ -21,6 +20,8 @@ namespace CaptureAndSave
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        private bool boolStop = false;
 
         public void SendPrintScreenButtonRight(String WindowName)
         {
@@ -75,13 +76,16 @@ namespace CaptureAndSave
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonSendkeys_Click(object sender, EventArgs e)
         {
             if (cboWindows.Text == "") return;
             IntPtr zero = IntPtr.Zero;            
             zero = FindWindow(null, cboWindows.Text);
             if (zero == IntPtr.Zero) return;
 
+            buttonStop.Enabled = true;
+            buttonSendkeys.Enabled = false;
+            boolStop = false;
             for (int i = 1; i<= numericUpDown1.Value; i++)
             {
                 SendPrintScreenButtonRight(cboWindows.Text);
@@ -91,7 +95,11 @@ namespace CaptureAndSave
                     textNumber.Text = (int.Parse(textNumber.Text) + 1).ToString();
                 }
                 Thread.Sleep(int.Parse(numericUpDown2.Value.ToString()));
+                Application.DoEvents();
+                if (boolStop) break;
             }
+            buttonStop.Enabled = false;
+            buttonSendkeys.Enabled = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -103,6 +111,11 @@ namespace CaptureAndSave
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            boolStop = true;
         }
     }
 }
