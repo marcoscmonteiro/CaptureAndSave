@@ -12,7 +12,7 @@ using System.Windows.Forms;
 namespace CaptureAndSave
 {
 
-    public partial class Form1 : Form
+    public partial class FormMain : Form
     {
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -22,6 +22,7 @@ namespace CaptureAndSave
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         private bool boolStop = false;
+        private int CaptureNum;
 
         public void SendPrintScreenButtonRight(String WindowName)
         {
@@ -35,7 +36,7 @@ namespace CaptureAndSave
                 SendKeys.Flush();
             }
         }
-        public Form1()
+        public FormMain()
         {
             InitializeComponent();
             GetTaskWindows();
@@ -76,46 +77,55 @@ namespace CaptureAndSave
             }
         }
 
-        private void buttonSendkeys_Click(object sender, EventArgs e)
-        {
-            if (cboWindows.Text == "") return;
-            IntPtr zero = IntPtr.Zero;            
-            zero = FindWindow(null, cboWindows.Text);
-            if (zero == IntPtr.Zero) return;
-
-            buttonStop.Enabled = true;
-            buttonSendkeys.Enabled = false;
-            boolStop = false;
-            for (int i = 1; i<= numericUpDown1.Value; i++)
+        private void SendKeysAndCapture()
+        {           
+            SendPrintScreenButtonRight(cboWindows.Text);
+            if (Clipboard.ContainsImage() == true)
             {
-                SendPrintScreenButtonRight(cboWindows.Text);
-                if (Clipboard.ContainsImage() == true)
-                {
-                    Clipboard.GetImage().Save(textDir.Text + @"\" + textFilename.Text + textNumber.Text.ToString().PadLeft(4, '0') + @".png", System.Drawing.Imaging.ImageFormat.Png);
-                    textNumber.Text = (int.Parse(textNumber.Text) + 1).ToString();
-                }
-                Thread.Sleep(int.Parse(numericUpDown2.Value.ToString()));
-                Application.DoEvents();
-                if (boolStop) break;
+                Clipboard.GetImage().Save(textDir.Text + @"\" + textFilename.Text + textNumber.Text.ToString().PadLeft(4, '0') + @".png", System.Drawing.Imaging.ImageFormat.Png);
+                textNumber.Text = (int.Parse(textNumber.Text) + 1).ToString();
             }
-            buttonStop.Enabled = false;
-            buttonSendkeys.Enabled = true;
+            CaptureNum = CaptureNum + 1;
+            labelCaptures.Text = "Captures: " + CaptureNum.ToString();
+            if (CaptureNum == numericUpDown1.Value) buttonStop_Click(null, null);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonSendkeys_Click(object sender, EventArgs e)
+        {
+            IntPtr zero = IntPtr.Zero;
+            zero = FindWindow(null, cboWindows.Text);
+            if (cboWindows.Text == "" || zero == IntPtr.Zero)
+            {
+                MessageBox.Show("Window does not exist.");
+            }
+
+            CaptureNum = 0;
+            timerCapture.Interval = int.Parse(numericUpDown2.Value.ToString());
+            buttonStop.Enabled = true;
+            buttonSendkeys.Enabled = false;
+            groupBox1.Enabled = false;
+
+            timerCapture.Start();
+
+        }
+
+        private void buttonRefresh_Click(object sender, EventArgs e)
         {
             cboWindows.Items.Clear();
             GetTaskWindows();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void buttonStop_Click(object sender, EventArgs e)
         {
-            boolStop = true;
+            timerCapture.Stop();
+            buttonStop.Enabled = false;
+            buttonSendkeys.Enabled = true;
+            groupBox1.Enabled = true;
+        }
+
+        private void timerCapture_Tick(object sender, EventArgs e)
+        {
+            SendKeysAndCapture();
         }
     }
 }
