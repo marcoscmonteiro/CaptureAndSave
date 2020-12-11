@@ -30,7 +30,7 @@ namespace CaptureAndSave
             if (zero != IntPtr.Zero)
             {
                 SetForegroundWindow(zero);
-                SendKeys.SendWait("%{PRTSC}{RIGHT}");
+                SendKeys.SendWait(textBoxCommands.Text);
                 SendKeys.Flush();
             }
         }
