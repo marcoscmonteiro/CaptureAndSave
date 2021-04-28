@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -21,19 +22,20 @@ namespace CaptureAndSave
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        private bool boolStop = false;
         private int CaptureNum;
 
         public void SendPrintScreenButtonRight(String WindowName)
         {
-            IntPtr zero = IntPtr.Zero;
+            IntPtr hHandle = IntPtr.Zero;
 
-            zero = FindWindow(null, WindowName);
-            if (zero != IntPtr.Zero)
+            hHandle = FindWindow(null, WindowName);
+            if (hHandle != IntPtr.Zero)
             {
-                SetForegroundWindow(zero);
+                SetForegroundWindow(hHandle);
+                if (checkBoxEnableMouseClick.Checked) 
+                    ClickOnPointTool.ClickOnPoint(hHandle, new Point { X = int.Parse(textX.Text), Y = int.Parse(textY.Text) });
                 SendKeys.SendWait(textBoxCommands.Text);
-                SendKeys.Flush();
+                SendKeys.Flush();                
             }
         }
         public FormMain()
@@ -80,6 +82,7 @@ namespace CaptureAndSave
         private void SendKeysAndCapture()
         {           
             SendPrintScreenButtonRight(cboWindows.Text);
+            Thread.Sleep(int.Parse(numericUpDownTimeBeforeCapture.Value.ToString()));
             if (Clipboard.ContainsImage() == true)
             {
                 Clipboard.GetImage().Save(textDir.Text + @"\" + textFilename.Text + textNumber.Text.ToString().PadLeft(4, '0') + @".png", System.Drawing.Imaging.ImageFormat.Png);
@@ -97,10 +100,11 @@ namespace CaptureAndSave
             if (cboWindows.Text == "" || zero == IntPtr.Zero)
             {
                 MessageBox.Show("Window does not exist.");
+                return;
             }
 
             CaptureNum = 0;
-            timerCapture.Interval = int.Parse(numericUpDown2.Value.ToString());
+            timerCapture.Interval = int.Parse(numericUpDown2.Value.ToString())+int.Parse(numericUpDownTimeBeforeCapture.Value.ToString());
             buttonStop.Enabled = true;
             buttonSendkeys.Enabled = false;
             groupBox1.Enabled = false;
@@ -124,7 +128,7 @@ namespace CaptureAndSave
         }
 
         private void timerCapture_Tick(object sender, EventArgs e)
-        {
+        {            
             SendKeysAndCapture();
         }
     }
